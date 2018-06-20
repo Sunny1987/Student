@@ -80,9 +80,8 @@ public class SellBook extends AppCompatActivity {
         book_publisher = (EditText)findViewById(R.id.book_publisher);
         book_category = (EditText)findViewById(R.id.book_category);
         book_price = (EditText)findViewById(R.id.book_price);
+        book = (ImageView)findViewById(R.id.book_image);
 
-
-       book = (ImageView)findViewById(R.id.book_image);
         book.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
