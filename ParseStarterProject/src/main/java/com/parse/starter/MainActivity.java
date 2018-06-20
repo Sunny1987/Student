@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.parse.ParseUser;
+
 public class MainActivity extends AppCompatActivity {
 
     Button new_signup;
@@ -38,5 +40,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            // do stuff with the user
+            Intent intent = new Intent(getApplicationContext(),UserFeed.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(getApplicationContext(),Login.class);
+            startActivity(intent);
+            // show the signup or login screen
+        }
     }
 }
