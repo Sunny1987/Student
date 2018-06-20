@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -47,6 +48,7 @@ public class AccountActivity extends AppCompatActivity {
     ImageView logout;
     ImageView profileImage;
     TextView name;
+    //ImageView sell_book;
 
 
 
@@ -131,10 +133,17 @@ public class AccountActivity extends AppCompatActivity {
         setting = (ImageView) findViewById(R.id.setting);
         logout = (ImageView) findViewById(R.id.logout);
         name  = (TextView)findViewById(R.id.name) ;
+        //sell_book = (ImageView)findViewById(R.id.sell_book);
 
         name.setText(ParseUser.getCurrentUser().getUsername());
 
-
+        /*sell_book.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SellBook.class);
+                startActivity(intent);
+            }
+        });*/
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,14 +175,20 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),MySettings.class);
+                startActivity(intent);
+            }
+        });
+
 
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Image");
        // Log.i("fl",Integer.toString(fl));
 
-
-
-
-
+            //query.orderByDescending("createdAt");
+            query.whereEqualTo("username",ParseUser.getCurrentUser().getUsername());
             query.orderByDescending("createdAt");
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
@@ -189,7 +204,10 @@ public class AccountActivity extends AppCompatActivity {
                                         if (e == null && data != null) {
                                             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                                             profileImage.setImageBitmap(bitmap);
-                                        }
+                                        }/*else {
+                                            Drawable res = getResources().getDrawable(R.drawable.user_image,null);
+                                            profileImage.setImageDrawable(res);
+                                        }*/
                                     }
                                 });
                             }
