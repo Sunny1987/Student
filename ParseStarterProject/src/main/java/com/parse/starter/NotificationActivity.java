@@ -22,6 +22,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     ImageView myFeed;
     ImageView account;
+    ImageView chat;
     RecyclerView recycler_notification;
     RecyclerView.Adapter notif_adapter;
     RecyclerView.LayoutManager layoutManager;
@@ -48,7 +49,7 @@ public class NotificationActivity extends AppCompatActivity {
 
 
         //notif_query.whereEqualTo("Seller", ParseUser.getCurrentUser().getUsername());
-
+        notif_query.orderByDescending("createdAt");
         notif_query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -63,14 +64,14 @@ public class NotificationActivity extends AppCompatActivity {
                         String status = (String)object.get("Status");
                         if(seller.equals(ParseUser.getCurrentUser().getUsername())){
                             String message =  buyer + " wants to buy this book:";
-                            NotifBookSet sellSet = new NotifBookSet(name,cat,pub,price,buyer,seller,message);
+                            NotifBookSet sellSet = new NotifBookSet(name,cat,pub,price,buyer,seller,message,status);
                             notifBookSets.add(sellSet);
                             notif_adapter.notifyDataSetChanged();
                         }
 
                         if((buyer.equals(ParseUser.getCurrentUser().getUsername())) && (!(status.equals("No")))){
                             String message = seller+" has responded";
-                            NotifBookSet buySet = new NotifBookSet(name,cat,pub,price,buyer,seller,message);
+                            NotifBookSet buySet = new NotifBookSet(name,cat,pub,price,buyer,seller,message,status);
                             notifBookSets.add(buySet);
                             notif_adapter.notifyDataSetChanged();
                         }
@@ -87,6 +88,15 @@ public class NotificationActivity extends AppCompatActivity {
 
         account = (ImageView)findViewById(R.id.account);
         myFeed = (ImageView)findViewById(R.id.news);
+        chat = (ImageView)findViewById(R.id.chat);
+
+        chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),ChatRoom.class);
+                startActivity(intent);
+            }
+        });
 
         account.setOnClickListener(new View.OnClickListener() {
             @Override
