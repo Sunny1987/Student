@@ -6,27 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".UserFeed">
 
-    <SearchView
-        android:id="@+id/query"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/darker_gray" />
 
-    <GridView
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="40dp"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="461dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="75dp"
+        android:background="@android:color/darker_gray" />
 
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
+
         android:layout_marginBottom="69dp"
         android:background="@android:color/background_dark" />
 
@@ -37,7 +32,7 @@
         android:layout_height="60dp"
         android:paddingBottom="5dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
+
         android:orientation="horizontal">
 
         <ImageView
@@ -45,12 +40,17 @@
             android:layout_width="10dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/news_feed" />
+            app:srcCompat="@drawable/moniter" />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="@android:color/background_dark" />
+        <ImageView
+            android:id="@+id/chat"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/chat" />
+
+
+
 
         <ImageView
             android:id="@+id/notif"
@@ -58,12 +58,6 @@
             android:layout_height="70dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/notification" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="@android:color/background_dark" />
-
 
         <ImageView
             android:id="@+id/account"
