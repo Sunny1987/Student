@@ -2,6 +2,7 @@ package com.parse.starter;
 
 import android.app.LauncherActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -70,6 +71,29 @@ public class UserFeedAdapter extends RecyclerView.Adapter<UserFeedAdapter.ViewHo
             }
         });
 
+
+        holder.chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String seller = bookSet.getSeller();
+                Context context = bookSet.getContext();
+                if(!seller.equals(ParseUser.getCurrentUser().getUsername())){
+                    Intent intent = new Intent(context,ChatActivity.class);
+                    intent.putExtra("activeUser",seller);
+                    context.startActivity(intent);
+                }else {
+                    Toast.makeText(context, "Can't start chat with yourself", Toast.LENGTH_SHORT).show();
+                }
+
+                //startActivity(intent);
+                //context.startActivity(new Intent(context,ChatActivity.class));
+
+
+            }
+        });
+
+
         holder.buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,15 +129,21 @@ public class UserFeedAdapter extends RecyclerView.Adapter<UserFeedAdapter.ViewHo
                                     buy_prod.put("Seller",user);
                                     buy_prod.put("Buyer", ParseUser.getCurrentUser().getUsername());
                                     buy_prod.put("Status","No");
+
                                     buy_prod.saveInBackground(new SaveCallback() {
                                         @Override
                                         public void done(ParseException e) {
+                                            Context context = bookSet.getContext();
                                             if(e == null){
                                                 Log.i("Save ","Successful");
+
+                                                Toast.makeText(context, "Buy request sent successful", Toast.LENGTH_SHORT).show();
+
 
 
                                             }else {
                                                 Log.i("Save","Unsuccessful");
+                                                Toast.makeText(context, "Buy request failed", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
@@ -149,6 +179,7 @@ public class UserFeedAdapter extends RecyclerView.Adapter<UserFeedAdapter.ViewHo
         TextView product_price;
         ImageView product_image;
         ImageView buy;
+        ImageView chat;
 
 
         public ViewHolder(View itemView) {
@@ -160,6 +191,7 @@ public class UserFeedAdapter extends RecyclerView.Adapter<UserFeedAdapter.ViewHo
           product_price = (TextView)itemView.findViewById(R.id.product_price);
           product_image = (ImageView)itemView.findViewById(R.id.product_image);
           buy = (ImageView)itemView.findViewById(R.id.buy_book);
+          chat = (ImageView)itemView.findViewById(R.id.message_cust);
 
        }
     }
