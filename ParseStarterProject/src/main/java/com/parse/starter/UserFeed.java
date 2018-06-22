@@ -24,6 +24,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -34,7 +35,7 @@ public class UserFeed extends AppCompatActivity {
     ImageView account;
     ImageView notif;
     ImageView buy;
-
+    ImageView chat;
 
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
@@ -51,6 +52,16 @@ public class UserFeed extends AppCompatActivity {
         account = (ImageView)findViewById(R.id.account);
         notif = (ImageView)findViewById(R.id.notif);
         buy = (ImageView)findViewById(R.id.buy_book);
+        chat = (ImageView)findViewById(R.id.chat);
+
+
+        chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),ChatRoom.class);
+                startActivity(intent);
+            }
+        });
 
        /*buy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +97,7 @@ public class UserFeed extends AppCompatActivity {
 
 
         ParseQuery<ParseObject> dashboardQuery = new ParseQuery<ParseObject>("Sell");
+
         dashboardQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -97,8 +109,9 @@ public class UserFeed extends AppCompatActivity {
                         String pub = (String)parseObject.get("publisher");
                         String price = (String) parseObject.get("price");
                         ParseFile pf = (ParseFile) parseObject.get("image_book") ;
+                        String seller = (String)parseObject.get("username");
 
-                        BookSet bookSet = new BookSet(name,cat,pub,price,pf);
+                        BookSet bookSet = new BookSet(name,cat,pub,price,pf,seller,getApplicationContext());
                         bookList.add(bookSet);
                         adapter.notifyDataSetChanged();
                     }
