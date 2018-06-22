@@ -1,9 +1,9 @@
 package com.parse.starter;
 
 public class NotifBookSet {
-   private String buy_book_name,buy_book_cat,buy_book_pub,buy_book_price,buyer,seller,message;
+   private String buy_book_name,buy_book_cat,buy_book_pub,buy_book_price,buyer,seller,message,status;
 
-    public NotifBookSet(String buy_book_name, String buy_book_cat, String buy_book_pub, String buy_book_price, String buyer,String seller,String message) {
+    public NotifBookSet(String buy_book_name, String buy_book_cat, String buy_book_pub, String buy_book_price, String buyer,String seller,String message,String status) {
         this.buy_book_name = buy_book_name;
         this.buy_book_cat = buy_book_cat;
         this.buy_book_pub = buy_book_pub;
@@ -11,6 +11,15 @@ public class NotifBookSet {
         this.buyer = buyer;
         this.seller = seller;
         this.message = message;
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getMessage() {
