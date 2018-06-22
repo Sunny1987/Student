@@ -1,5 +1,7 @@
 package com.parse.starter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +24,8 @@ import java.util.List;
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder>{
 
     private ArrayList<NotifBookSet> buyRecord;
+    Context context;
+    String bookName,bookCat,bookPub,bookPrice,bookBuyer,status;
 
     public NotificationAdapter(ArrayList<NotifBookSet> buyRecord) {
         this.buyRecord = buyRecord;
@@ -37,8 +41,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final NotificationAdapter.ViewHolder holder, int position) {
-
+        context = holder.itemView.getContext();
         final NotifBookSet notifBookSet = buyRecord.get(position);
+
+        bookName = notifBookSet.getBuy_book_name();
+        bookCat = notifBookSet.getBuy_book_cat();
+        bookPub = notifBookSet.getBuy_book_pub();
+        bookPrice = notifBookSet.getBuy_book_price();
+        bookBuyer = notifBookSet.getMessage();
+        Log.i("book name in binder ",bookName);
+        Log.i("buyer in binder ",bookBuyer);
+
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Buy");
         query.whereEqualTo("Book_Name",notifBookSet.getBuy_book_name())
                 .whereEqualTo("Book_Category",notifBookSet.getBuy_book_cat())
@@ -46,15 +59,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 .whereEqualTo("Buyer",notifBookSet.getBuyer())
                 .whereEqualTo("Seller",notifBookSet.getSeller());
 
-
-
-            holder.buy_name.setText(notifBookSet.getBuy_book_name());
-            holder.buy_cat.setText(notifBookSet.getBuy_book_cat());
-            holder.buy_pub.setText(notifBookSet.getBuy_book_pub());
-            holder.buy_price.setText("₹"+notifBookSet.getBuy_book_price());
-            holder.buyer.setText(notifBookSet.getMessage());
-
-
+            holder.buyer.setText(bookBuyer + " "+bookName);
 
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
@@ -64,12 +69,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                             if(parseObject.get("Status").toString().equals("Request Accepted")){
                                 holder.message.setText(parseObject.get("Status").toString());
-                                holder.accept.setVisibility(View.INVISIBLE);
-                                holder.decline.setVisibility(View.INVISIBLE);
+                                status = parseObject.get("Status").toString();
+                                //holder.accept.setVisibility(View.INVISIBLE);
+                                //holder.decline.setVisibility(View.INVISIBLE);
                             }if(parseObject.get("Status").toString().equals("Request Declined")){
                                 holder.message.setText(parseObject.get("Status").toString());
-                                holder.accept.setVisibility(View.INVISIBLE);
-                                holder.decline.setVisibility(View.INVISIBLE);
+                                status = parseObject.get("Status").toString();
+                                //holder.accept.setVisibility(View.INVISIBLE);
+                                //holder.decline.setVisibility(View.INVISIBLE);
+                            }if(parseObject.get("Status").toString().equals("No")){
+                                holder.message.setText("Request pending");
+                                status = parseObject.get("Status").toString();
                             }
 
                         }
@@ -77,69 +87,21 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 }
             });
 
-            holder.accept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    holder.accept.setVisibility(View.INVISIBLE);
-                    holder.decline.setVisibility(View.INVISIBLE);
-                    holder.message.setText("Request Accepted");
-                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Buy");
-                    query.whereEqualTo("Book_Name",notifBookSet.getBuy_book_name())
-                            .whereEqualTo("Book_Category",notifBookSet.getBuy_book_cat())
-                            .whereEqualTo("Book_Publisher",notifBookSet.getBuy_book_pub())
-                            .whereEqualTo("Buyer",notifBookSet.getBuyer());
 
-                    query.findInBackground(new FindCallback<ParseObject>() {
-                        @Override
-                        public void done(List<ParseObject> objects, ParseException e) {
-                            if(e == null){
-                                for(ParseObject parseObject : objects){
-                                    parseObject.put("Status","Request Accepted");
-                                    parseObject.saveInBackground();
-                                }
-                            }
-                        }
-                    });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context,ExpandNotification.class);
+                intent.putExtra("bookName",notifBookSet.getBuy_book_name());
+                intent.putExtra("bookCat",notifBookSet.getBuy_book_cat());
+                intent.putExtra("bookPub",notifBookSet.getBuy_book_pub());
+                intent.putExtra("bookPrice",notifBookSet.getBuy_book_price());
+                intent.putExtra("bookBuyer",notifBookSet.getBuyer());
+                intent.putExtra("status",notifBookSet.getStatus());
+                context.startActivity(intent);
 
-
-
-
-                }
-            });
-
-            holder.decline.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    holder.accept.setVisibility(View.INVISIBLE);
-                    holder.decline.setVisibility(View.INVISIBLE);
-                    holder.message.setText("Request Declined");
-                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Buy");
-                    query.whereEqualTo("Book_Name",notifBookSet.getBuy_book_name())
-                            .whereEqualTo("Book_Category",notifBookSet.getBuy_book_cat())
-                            .whereEqualTo("Book_Publisher",notifBookSet.getBuy_book_pub())
-                            .whereEqualTo("Buyer",notifBookSet.getBuyer());
-
-                    query.findInBackground(new FindCallback<ParseObject>() {
-                        @Override
-                        public void done(List<ParseObject> objects, ParseException e) {
-                            if(e == null){
-                                for(ParseObject parseObject : objects){
-                                    parseObject.put("Status","Request Declined");
-                                    parseObject.saveInBackground();
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-
-
-
-
-
-
-
-
+            }
+        });
 
 
     }
@@ -152,12 +114,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView buy_name;
-        TextView buy_cat;
-        TextView buy_pub;
-        TextView buy_price;
+        //TextView buy_name;
+        //TextView buy_cat;
+        //TextView buy_pub;
+        //TextView buy_price;
         TextView buyer,message;
-        ImageView accept,decline;
+        //ImageView accept,decline;
 
 
 
@@ -165,14 +127,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public ViewHolder(View itemView) {
 
             super(itemView);
-            buy_name = (TextView) itemView.findViewById(R.id.prod_name);
-            buy_cat = (TextView)itemView.findViewById(R.id.prod_cat);
-            buy_pub = (TextView)itemView.findViewById(R.id.prod_pub);
-            buy_price = (TextView)itemView.findViewById(R.id.prod_price);
             buyer = (TextView)itemView.findViewById(R.id.prod_buyer);
-            accept = (ImageView)itemView.findViewById(R.id.accept);
-            decline = (ImageView)itemView.findViewById(R.id.decline);
             message =(TextView)itemView.findViewById(R.id.message);
+
+
+
+
 
 
 
