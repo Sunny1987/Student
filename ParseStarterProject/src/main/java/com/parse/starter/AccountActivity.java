@@ -48,6 +48,7 @@ public class AccountActivity extends AppCompatActivity {
     ImageView logout;
     ImageView profileImage;
     TextView name;
+    ImageView chat;
     //ImageView sell_book;
 
 
@@ -133,6 +134,7 @@ public class AccountActivity extends AppCompatActivity {
         setting = (ImageView) findViewById(R.id.setting);
         logout = (ImageView) findViewById(R.id.logout);
         name  = (TextView)findViewById(R.id.name) ;
+        chat = (ImageView)findViewById(R.id.chat);
         //sell_book = (ImageView)findViewById(R.id.sell_book);
 
         name.setText(ParseUser.getCurrentUser().getUsername());
@@ -144,6 +146,14 @@ public class AccountActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });*/
+
+        chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),ChatRoom.class);
+                startActivity(intent);
+            }
+        });
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
